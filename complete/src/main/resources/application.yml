@@ -1,0 +1,5 @@
+server:
+  port : 80
+#ajp:
+#  port: 9090
+#  enabled: true
