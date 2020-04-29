@@ -18,24 +18,24 @@ public class ResumeController {
 		return new Experience(String.format(proficiency, skill));}
 
 	private String getString(@RequestParam(value = "experience", defaultValue = "Data Scientist") String skill) {
-		switch (skill) {
-			case "Python":
+		switch (skill.toLowerCase()) {
+			case "python":
 				skill = skill + " 8/10"; break;
-			case "Java":
+			case "java":
 				skill = skill + " 7/10"; break;
 			case "pandas":
 				skill = skill + " 8/10"; break;
 			case "numpy":
 				skill = skill + " 8/10"; break;
-			case "VBA":
+			case "vba":
 				skill = skill + " 10/10"; break;
-			case "API":
+			case "api":
 				skill = skill + " 4/10"; break;
-			case "Spring":
+			case "spring":
 				skill = skill + " 4/10"; break;
-			case "JIRA":
+			case "jira":
 				skill = skill + " 10/10"; break;
-			case "Data Scientist":
+			case "data scientist":
 				break;
 			default:
 				throw new IllegalArgumentException("Skill not mapped, please choose from Python, Java," +
