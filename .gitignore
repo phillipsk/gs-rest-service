@@ -16,4 +16,7 @@ dependency-reduced-pom.xml
 README.html
 *.iml
 .idea
-conf
+android-server-side/src/main/resources/conf
+android-server-side/src/test
+complete/src/main/resources/conf
+complete/src/test

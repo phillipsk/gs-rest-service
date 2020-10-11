@@ -1,4 +1,4 @@
-package com.service.android;
+package email.kevinphillips.service;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -9,19 +9,25 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 
 public class CCOauth {
 
     private static String request;
 
-    public static void main(String[] args){
+//    public void setProps(){
+//        InputStream in = CCOauth.getClass().getResourceAsStream("config.properties");
+//        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+//    }
+    public static void main(String[] args) {
         CCgetcampaign cc = new CCgetcampaign();
         String localhost, api_key, client_secret;
+        URL url;
+
 //        File configFile = new File("config.json");
-//        File pwd = new File("./");
-//        System.out.println(pwd.getAbsolutePath());
-//        System.out.println(pwd.getPath());
+//        System.out.println("Working Directory = " + System.getProperty("user.dir"));
+
 //        InputStream input = CCOauth.class.getResourceAsStream("src/main/resources/config.json");
 ////        InputStream in = FileLoader.class.getResourceAsStream("<relative path from this class to the file to be read>");
 //
@@ -32,21 +38,35 @@ public class CCOauth {
 //        client_secret = cc.readJsonKeyFromFile("client_secret",
 //                "src/main/resources/config.json");
 
+//        String ss = "";
+//        try {
+//            ss = cc.getResourceFileAsString("conf/config.properties");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println(ss);
+
+
+
+
         Properties prop = new Properties();
         try {
-            prop.load(new FileInputStream("android-server-side/conf/config.properties"));
+            prop.load(CCgetcampaign.class.getResourceAsStream("/config.properties"));
+//            prop.load(new FileInputStream("android-server-side/src/main/resources/conf/config.properties"));
+//            prop.load(CCOauth.class.getResourceAsStream("conf/config.properties")) ;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        localhost  = prop.getProperty("cc_localhost");
-        api_key  = prop.getProperty("cc_api_key");
-        client_secret  = prop.getProperty("cc_client_secret");
+        localhost = prop.getProperty("cc_localhost");
+        api_key = prop.getProperty("cc_api_key");
+        client_secret = prop.getProperty("cc_client_secret");
+        url = cc.getClass().getClassLoader().getResource("conf/cc_response.json");
 
 
         JSONParser parser = new JSONParser();
         String refreshToken;
 //        System.out.println("Working Directory = " + System.getProperty("user.dir"));
-        final String filename = "android-server-side/conf/cc_response.json";
+        final String filename = "android-server-side/src/main/resources/conf/cc_response.json";
         refreshToken = cc.readJsonKeyFromFile("refresh_token", filename);
         try {
             request = cc.getToken(localhost, api_key, client_secret, refreshToken, false);
@@ -64,13 +84,17 @@ public class CCOauth {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        System.out.println(refreshToken);
+//        System.out.println(refreshToken);
     }
 
 
-    private static class CCgetcampaign {
-
-
+    public static class CCgetcampaign {
+//        Properties props = new Properties();
+//
+//        InputStream in = getClass().getResourceAsStream("/config.properties");
+//        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+//        props
+//        props
         /*
          * This method can be used to generate the URL an account owner would use to allow your app to access their account.
          * After visiting the URL, the account owner is prompted to log in and allow your app to access their account.
@@ -215,6 +239,16 @@ public class CCOauth {
 //            }
 
             return value;
+        }
+        public String getResourceFileAsString(String fileName) throws IOException {
+            ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+            try (InputStream is = classLoader.getResourceAsStream(fileName)) {
+                if (is == null) return null;
+                try (InputStreamReader isr = new InputStreamReader(is);
+                     BufferedReader reader = new BufferedReader(isr)) {
+                    return reader.lines().collect(Collectors.joining(System.lineSeparator()));
+                }
+            }
         }
     }
 }
